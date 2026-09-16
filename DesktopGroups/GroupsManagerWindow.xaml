@@ -1,0 +1,182 @@
+<Window x:Class="DesktopGroups.GroupsManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Desktop Groups - Gestor"
+        Width="700" Height="540" MinWidth="600" MinHeight="460"
+        WindowStartupLocation="CenterScreen"
+        Background="#FF1E1E2E">
+  <Window.Resources>
+    <Style x:Key="Btn" TargetType="Button">
+      <Setter Property="Background" Value="#FF313244"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Padding" Value="14,7"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border Background="{TemplateBinding Background}" CornerRadius="6"
+                    Padding="{TemplateBinding Padding}">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Background" Value="#FF45475A"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+    <Style x:Key="DangerBtn" TargetType="Button" BasedOn="{StaticResource Btn}">
+      <Setter Property="Background" Value="#FF3D1A1A"/>
+      <Setter Property="Foreground" Value="#FFFF9090"/>
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Background" Value="#FF5A2020"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+    <Style x:Key="GreenBtn" TargetType="Button" BasedOn="{StaticResource Btn}">
+      <Setter Property="Background" Value="#FF1A3D2A"/>
+      <Setter Property="Foreground" Value="#FF90FFB0"/>
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Background" Value="#FF20522F"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+    <Style TargetType="ListBoxItem">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="10,7"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+            <Border Background="{TemplateBinding Background}" CornerRadius="6"
+                    Padding="{TemplateBinding Padding}" Margin="3,2">
+              <ContentPresenter/>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+      <Style.Triggers>
+        <Trigger Property="IsSelected" Value="True">
+          <Setter Property="Background" Value="#FF45475A"/>
+        </Trigger>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Background" Value="#22FFFFFF"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
+  </Window.Resources>
+
+  <Grid Margin="20">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <TextBlock Text="Mis Grupos" Foreground="White"
+               FontSize="20" FontWeight="Bold" Margin="0,0,0,14"/>
+
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="190"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+
+      <!-- Lista de grupos -->
+      <Border Background="#FF313244" CornerRadius="10" Margin="0,0,14,0">
+        <ListBox x:Name="GroupListBox" Background="Transparent" BorderThickness="0"
+                 SelectionChanged="GroupListBox_SelectionChanged" Padding="4"/>
+      </Border>
+
+      <!-- Panel de detalle -->
+      <Border Grid.Column="1" Background="#FF313244" CornerRadius="10">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel x:Name="DetailPanel" Margin="20,16" Visibility="Collapsed">
+
+            <!-- Nombre -->
+            <TextBlock Text="NOMBRE" Foreground="#888888" FontSize="10"
+                       FontWeight="Bold" Margin="0,0,0,6"/>
+            <DockPanel Margin="0,0,0,18">
+              <Button Content="Guardar" Style="{StaticResource Btn}" Width="80"
+                      DockPanel.Dock="Right" Margin="8,0,0,0" Click="RenameGroup_Click"/>
+              <Border Background="#FF1E1E2E" CornerRadius="6">
+                <TextBox x:Name="TxtGroupName" Background="Transparent" Foreground="White"
+                         BorderThickness="0" Padding="10,8" FontSize="13"/>
+              </Border>
+            </DockPanel>
+
+            <!-- Ícono -->
+            <TextBlock Text="ICONO PERSONALIZADO (.ICO)" Foreground="#888888"
+                       FontSize="10" FontWeight="Bold" Margin="0,0,0,6"/>
+            <DockPanel Margin="0,0,0,20">
+              <Button Content="Examinar..." Style="{StaticResource Btn}" Width="90"
+                      DockPanel.Dock="Right" Margin="8,0,0,0" Click="BrowseIcon_Click"/>
+              <Border Background="#FF1E1E2E" CornerRadius="6">
+                <TextBox x:Name="TxtIconPath" Background="Transparent" Foreground="#888888"
+                         BorderThickness="0" Padding="10,8" FontSize="11" IsReadOnly="True"/>
+              </Border>
+            </DockPanel>
+
+            <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,14"/>
+
+            <!-- Accesos directos -->
+            <DockPanel Margin="0,0,0,8" LastChildFill="False">
+              <TextBlock Text="ACCESOS DIRECTOS" Foreground="#888888"
+                         FontSize="10" FontWeight="Bold" VerticalAlignment="Center"/>
+              <Button Content="+ Agregar" Style="{StaticResource GreenBtn}"
+                      DockPanel.Dock="Right" Padding="10,4"
+                      Click="AddShortcut_Click"/>
+            </DockPanel>
+
+            <Border Background="#FF1E1E2E" CornerRadius="8" Padding="4" Margin="0,0,0,16">
+              <ListBox x:Name="ShortcutListBox" Background="Transparent"
+                       BorderThickness="0" MaxHeight="160" Foreground="White">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <DockPanel>
+                      <Button Content="X" DockPanel.Dock="Right" Background="Transparent"
+                              Foreground="#FF666688" BorderThickness="0" Cursor="Hand"
+                              Width="24" Tag="{Binding TargetPath}"
+                              Click="RemoveShortcutManager_Click"/>
+                      <Image Source="{Binding Icon}" Width="16" Height="16"
+                             Margin="0,0,8,0" VerticalAlignment="Center"/>
+                      <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                 TextTrimming="CharacterEllipsis"/>
+                    </DockPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </Border>
+
+            <Rectangle Height="1" Fill="#33FFFFFF" Margin="0,0,0,14"/>
+
+            <!-- Acciones del grupo -->
+            <TextBlock Text="ACCIONES" Foreground="#888888"
+                       FontSize="10" FontWeight="Bold" Margin="0,0,0,10"/>
+            <WrapPanel>
+              <Button Content="Recrear en escritorio" Style="{StaticResource Btn}"
+                      Margin="0,0,8,8" Click="RecreateShortcut_Click"/>
+              <Button Content="Eliminar grupo" Style="{StaticResource DangerBtn}"
+                      Margin="0,0,0,8" Click="DeleteGroup_Click"/>
+            </WrapPanel>
+
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+
+    <!-- Botones inferiores -->
+    <StackPanel Grid.Row="2" Orientation="Horizontal"
+                HorizontalAlignment="Right" Margin="0,14,0,0">
+      <Button Content="Nuevo Grupo" Style="{StaticResource Btn}"
+              Margin="0,0,8,0" Click="NewGroup_Click"/>
+      <Button Content="Cerrar" Style="{StaticResource Btn}" Click="CloseBtn_Click"/>
+    </StackPanel>
+  </Grid>
+</Window>
